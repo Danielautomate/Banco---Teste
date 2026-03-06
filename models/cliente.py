@@ -26,7 +26,6 @@ class Cliente:
     @property
     def codigo(self) -> int:
         return self.__codigo
-
     @property
     def nome(self) -> str:
         return self.__nome
