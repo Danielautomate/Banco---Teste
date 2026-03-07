@@ -53,24 +53,116 @@ def menu() -> None:
         print("Erro: Digite apena opção validas ")
     
 
-
+#================== CRIANDO CONTA ================
 def cria_conta() -> None:
-    pass
+    print('Informe os dados do cliente: ')
+
+    nome: str = input('Nome do cliente: ')
+    email: str = input("E-mail do cliente: ")
+    cpf: str = input("CPF do cliente: ")
+    data_nascimento: str = input("Data de nascimento do cliente: ")
+    cep: str = input ("informe o CEP do cliente: ")
+
+    cliente: Cliente = Cliente(nome,cpf, email, data_nascimento, cep)
+
+    conta: Conta = Conta(cliente)
+
+    contas.append(conta)
+
+    print("Conta criada com sucesso")
+    print("Dados da conta: ")
+    print("-----------------")
+    print(conta)
+    sleep(2)
 
 def efetuar_saque() -> None:
-    pass
+ 
+    if not contas:
+        print("Nenhuma conta cadastrada.")
+        return
+
+    try:
+        numero: int = int(input('Informe o número da conta: ').strip())
+        conta: Conta = buscar_conta_por_numero(numero)
+
+        if not conta:
+            print(f'Conta {numero} não encontrada.')
+            return
+
+        valor: float = float(input('Informe o valor do saque: ').strip())
+        conta.sacar(valor)
+
+    except ValueError:
+        print("Digite apenas números válidos.")
+
+    sleep(2)
 
 
 def efetuar_depositor() -> None:
-    pass
+    if not contas:
+        print("Nenhuma conta Cadastrada.")
+        return
+    
+    try:
+        numero: int = int(input("Informe o número da conta: ").strip())
+        conta: Conta = buscar_conta_por_numero(numero)
+
+        if not conta:
+            print(f'conta {numero} não encontrada.')
+            return
+        valor: float = float(input("Informe o valor do despósito: ").strip())
+        conta.deposita(valor)
+
+
+    except ValueError:
+        print("Digite apenas números válidos.")
+
+    sleep(2)
+
 
 
 def efetuar_transferencia() -> None:
-    pass
+    if not contas:
+        print("Nenhuma conta Cadastrada.")
+        return
+    
+    try:
+        numero_origem: int = int(input("informe o número da conta: ").strip())
+        conta_origem: Conta = buscar_conta_por_numero(numero_origem)
+        
+        if not conta_origem:
+            print(f'Conta {numero_origem} não encontrada')
+            return
+        
+        numero_destino: int = int(input('Informe o número da conta destino.').strip())
+        conta_destino: Conta = buscar_conta_por_numero(numero_destino)
 
+        if not conta_destino:
+            print(f"Conta {numero_destino} não encontrada")
+            return
+        valor: float = float(input("Informe o valor da Transferência: ").strip())
+        conta_origem.transferir(conta_destino, valor)
+
+        if numero_destino == numero_destino:
+            print("Não e possivel Transfereir para mesma conta ")
+            return
+
+    except ValueError:
+        print("Digite apenas números válidos.")
+
+    sleep(2)
 
 def lista_conta() -> None:
-    pass
+    if not contas:
+        print("Nenhuma conta cadastrada.")
+        return
+    print(f"Total de contas: {len(contas)}")
+
+    for i, conta in enumerate(contas, start= 1):
+        print(f'conta {i}')
+        print(conta)
+        print('----------------')
+        sleep(1)
     
 def saldo() -> None:
     pass
@@ -90,4 +182,4 @@ def sair():
 
 
 if __name__ == '__main__':
-    main
+    main()
