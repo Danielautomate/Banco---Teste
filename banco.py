@@ -36,10 +36,10 @@ def menu() -> None:
 
             '1': cria_conta,
             '2': efetuar_saque,
-            '3': efetuar_depositor,
+            '3': efetuar_deposito,
             '4': efetuar_transferencia,
             '5': lista_conta,
-            '6': saldo,
+            '6': extrato,
             '7': sair
         }
         if opcao in op:
@@ -75,6 +75,8 @@ def cria_conta() -> None:
     print(conta)
     sleep(2)
 
+#===================== SAQUE ==========================
+
 def efetuar_saque() -> None:
  
     if not contas:
@@ -97,8 +99,8 @@ def efetuar_saque() -> None:
 
     sleep(2)
 
-
-def efetuar_depositor() -> None:
+#==================== DESPOSITO =======================
+def efetuar_deposito() -> None:
     if not contas:
         print("Nenhuma conta Cadastrada.")
         return
@@ -112,6 +114,7 @@ def efetuar_depositor() -> None:
             return
         valor: float = float(input("Informe o valor do despósito: ").strip())
         conta.deposita(valor)
+        
 
 
     except ValueError:
@@ -119,39 +122,68 @@ def efetuar_depositor() -> None:
 
     sleep(2)
 
-
-
+#==================== TRANSFERENCIA ==================
 def efetuar_transferencia() -> None:
+
+    # Verifica se existe alguma conta cadastrada
     if not contas:
-        print("Nenhuma conta Cadastrada.")
+        print("Nenhuma conta cadastrada.")
+        sleep(2)
         return
-    
+
     try:
-        numero_origem: int = int(input("informe o número da conta: ").strip())
+        # Solicita o número da conta de origem
+        numero_origem: int = int(input("Informe o número da conta de origem: ").strip())
+
+        # Busca a conta na lista de contas
         conta_origem: Conta = buscar_conta_por_numero(numero_origem)
-        
+
+        # Se a conta não existir
         if not conta_origem:
-            print(f'Conta {numero_origem} não encontrada')
+            print(f"Conta {numero_origem} não encontrada.")
+            sleep(2)
             return
-        
-        numero_destino: int = int(input('Informe o número da conta destino.').strip())
+
+        # Solicita a conta de destino
+        numero_destino: int = int(input("Informe o número da conta destino: ").strip())
+
+        # Verifica se o usuário tentou transferir para a mesma conta
+        if numero_origem == numero_destino:
+            print("Não é possível transferir para a mesma conta.")
+            sleep(2)
+            return
+
+        # Busca a conta destino
         conta_destino: Conta = buscar_conta_por_numero(numero_destino)
 
+        # Verifica se a conta destino existe
         if not conta_destino:
-            print(f"Conta {numero_destino} não encontrada")
+            print(f"Conta {numero_destino} não encontrada.")
+            sleep(2)
             return
-        valor: float = float(input("Informe o valor da Transferência: ").strip())
+
+        # Solicita o valor da transferência
+        valor: float = float(input("Informe o valor da transferência: ").strip())
+
+        # Valida valor
+        if valor <= 0:
+            print("Valor inválido.")
+            sleep(2)
+            return
+
+        # Executa a transferência
         conta_origem.transferir(conta_destino, valor)
 
-        if numero_destino == numero_destino:
-            print("Não e possivel Transfereir para mesma conta ")
-            return
+        print("Transferência realizada com sucesso!")
 
     except ValueError:
+        # Caso o usuário digite algo que não seja número
         print("Digite apenas números válidos.")
 
+    # Pausa para o usuário ver a mensagem
     sleep(2)
 
+# ======================= CONTAS CADASTRADA ===========
 def lista_conta() -> None:
     if not contas:
         print("Nenhuma conta cadastrada.")
@@ -163,17 +195,31 @@ def lista_conta() -> None:
         print(conta)
         print('----------------')
         sleep(1)
-    
-def saldo() -> None:
-    pass
 
+#=============== EXTRATO ================================
+def extrato(self):
+
+    print("\n===== EXTRATO =====")
+
+    if not self.__extrato:
+        print("Nenhuma movimentação.")
+        return
+
+    for transacao in self.__extrato:
+        print(transacao)
+
+    print("--------------------")
+    print(f"Saldo atual: R$ {self.saldo_total:.2f}")
+
+
+#================= PROCURA CONTA ========================
 def buscar_conta_por_numero(numero: int) -> Optional[Conta]:
     for conta in contas:
         if conta.numero == numero:
             return conta
     return None
 
-
+#====================== FINALIZAR SISTEMA ================
 def sair():
     print("Saindo do Sistema.......")
     sleep(2)
